@@ -1,0 +1,33 @@
+version: "3"
+services:
+    php-fpm:
+        build: install/php-fpm
+        ports:
+            - 9010:9000
+        volumes:
+            - ./code:/var/www/html/
+        links:
+            - db
+    nginx:
+        build: install/nginx
+        ports:
+            - 8080:80
+        volumes:
+            - ./code:/var/www/html/        
+        links:
+            - php-fpm
+    db:
+        image: mysql:5.6
+        ports:
+            - 3308:3306
+        restart: always
+        environment:
+            MYSQL_DATABASE: MyDB
+            MYSQL_USER: MyDB
+            MYSQL_PASSWORD: mydbpassword
+            MYSQL_ROOT_PASSWORD: rootpassword
+        volumes:
+            - MysqlVolume:/var/lib/mysql
+
+volumes:
+  MysqlVolume:
